@@ -1,51 +1,87 @@
-import { neon } from '@neondatabase/serverless'
-import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation'
+'use client'
 
-export const revalidate = 0
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 
-// 인증 체크 함수
-async function checkAuth() {
-  const cookieStore = await cookies()
-  const auth = cookieStore.get('parking_auth')
-  
-  if (!auth) {
-    redirect('/login')
-  }
+interface Car {
+  id: number
+  car_number: string
+  owner?: string
+  spot: string
+  visit_date?: string
+  created_at: string
 }
 
-async function getResidents() {
-  const databaseUrl = process.env.DATABASE_URL
-  
-  if (!databaseUrl) {
-    console.error('DATABASE_URL is not set')
-    return []
-  }
-  
-  const sql = neon(databaseUrl)
-  const rows = await sql`SELECT * FROM residents ORDER BY id`
-  return rows
-}
+export default function ParkingStatus() {
+  const router = useRouter()
+  const [residents, setResidents] = useState<Car[]>([])
+  const [visitors, setVisitors] = useState<Car[]>([])
+  const [loading, setLoading] = useState(true)
 
-async function getVisitors() {
-  const databaseUrl = process.env.DATABASE_URL
-  
-  if (!databaseUrl) {
-    console.error('DATABASE_URL is not set')
-    return []
-  }
-  
-  const sql = neon(databaseUrl)
-  const rows = await sql`SELECT * FROM visitors ORDER BY id DESC`
-  return rows
-}
-
-export default async function ParkingStatus() {
   // 인증 체크
-  await checkAuth()
-  
-  const residents = await getResidents()
-  const visitors = await getVisitors()
+  useEffect(() => {
+    const checkAuth = () => {
+      const cookies = document.cookie.split(';')
+      const authCookie = cookies.find(c => c.trim().startsWith('parking_auth='))
+      
+      if (!authCookie) {
+        router.push('/login')
+      }
+    }
+    
+    checkAuth()
+  }, [router])
+
+  // 데이터 로드
+  useEffect(() => {
+    fetchData()
+  }, [])
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch('/api/parking-status')
+      const data = await response.json()
+      setResidents(data.residents || [])
+      setVisitors(data.visitors || [])
+    } catch (error) {
+      console.error('Failed to fetch data:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleDelete = async (id: number, type: 'resident' | 'visitor') => {
+    const confirmMsg = type === 'resident' 
+      ? '입주자 차량을 삭제하시겠습니까?' 
+      : '방문 차량을 삭제하시겠습니까?'
+    
+    if (!confirm(confirmMsg)) {
+      return
+    }
+
+    try {
+      const response = await fetch(`/api/residents?id=${id}&type=${type}`, {
+        method: 'DELETE'
+      })
+
+      if (response.ok) {
+        alert('삭제되었습니다')
+        fetchData() // 데이터 새로고침
+      } else {
+        alert('삭제 실패')
+      }
+    } catch (error) {
+      alert('오류가 발생했습니다')
+    }
+  }
+
+  if (loading) {
+    return (
+      <div style={{ padding: '40px', textAlign: 'center' }}>
+        <p>로딩 중...</p>
+      </div>
+    )
+  }
 
   return (
     <div style={{ padding: '40px', maxWidth: '1200px', margin: '0 auto' }}>
@@ -62,10 +98,11 @@ export default async function ParkingStatus() {
               <th style={{ padding: '12px', border: '1px solid #ddd' }}>차량번호</th>
               <th style={{ padding: '12px', border: '1px solid #ddd' }}>호실</th>
               <th style={{ padding: '12px', border: '1px solid #ddd' }}>비고</th>
+              <th style={{ padding: '12px', border: '1px solid #ddd', width: '100px' }}>작업</th>
             </tr>
           </thead>
           <tbody>
-            {residents.map((car: any) => (
+            {residents.map((car) => (
               <tr key={car.id}>
                 <td style={{ padding: '12px', border: '1px solid #ddd', textAlign: 'center' }}>
                   {car.car_number}
@@ -75,6 +112,22 @@ export default async function ParkingStatus() {
                 </td>
                 <td style={{ padding: '12px', border: '1px solid #ddd', textAlign: 'center' }}>
                   {car.spot}
+                </td>
+                <td style={{ padding: '12px', border: '1px solid #ddd', textAlign: 'center' }}>
+                  <button
+                    onClick={() => handleDelete(car.id, 'resident')}
+                    style={{
+                      padding: '6px 12px',
+                      fontSize: '14px',
+                      backgroundColor: '#dc3545',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '4px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    삭제
+                  </button>
                 </td>
               </tr>
             ))}
@@ -93,19 +146,36 @@ export default async function ParkingStatus() {
               <th style={{ padding: '12px', border: '1px solid #ddd' }}>차량번호</th>
               <th style={{ padding: '12px', border: '1px solid #ddd' }}>방문일</th>
               <th style={{ padding: '12px', border: '1px solid #ddd' }}>방문세대</th>
+              <th style={{ padding: '12px', border: '1px solid #ddd', width: '100px' }}>작업</th>
             </tr>
           </thead>
           <tbody>
-            {visitors.map((car: any) => (
+            {visitors.map((car) => (
               <tr key={car.id}>
                 <td style={{ padding: '12px', border: '1px solid #ddd', textAlign: 'center' }}>
                   {car.car_number}
                 </td>
                 <td style={{ padding: '12px', border: '1px solid #ddd', textAlign: 'center' }}>
-                  {new Date(car.visit_date).toLocaleDateString('ko-KR')}
+                  {car.visit_date ? new Date(car.visit_date).toLocaleDateString('ko-KR') : '-'}
                 </td>
                 <td style={{ padding: '12px', border: '1px solid #ddd', textAlign: 'center' }}>
                   {car.spot}
+                </td>
+                <td style={{ padding: '12px', border: '1px solid #ddd', textAlign: 'center' }}>
+                  <button
+                    onClick={() => handleDelete(car.id, 'visitor')}
+                    style={{
+                      padding: '6px 12px',
+                      fontSize: '14px',
+                      backgroundColor: '#dc3545',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '4px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    삭제
+                  </button>
                 </td>
               </tr>
             ))}
