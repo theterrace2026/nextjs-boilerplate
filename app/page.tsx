@@ -1,14 +1,16 @@
-import { sql } from '@vercel/postgres'
+import { neon } from '@neondatabase/serverless'
 
-export const revalidate = 0 // 매번 새로운 데이터 가져오기
+export const revalidate = 0
 
 async function getResidents() {
-  const { rows } = await sql`SELECT * FROM residents ORDER BY id`
+  const sql = neon(process.env.DATABASE_URL!)
+  const rows = await sql`SELECT * FROM residents ORDER BY id`
   return rows
 }
 
 async function getVisitors() {
-  const { rows } = await sql`SELECT * FROM visitors ORDER BY id DESC`
+  const sql = neon(process.env.DATABASE_URL!)
+  const rows = await sql`SELECT * FROM visitors ORDER BY id DESC`
   return rows
 }
 

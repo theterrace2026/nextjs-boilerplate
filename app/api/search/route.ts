@@ -1,4 +1,4 @@
-import { sql } from '@vercel/postgres'
+import { neon } from '@neondatabase/serverless'
 import { NextResponse } from 'next/server'
 
 export async function GET(request: Request) {
@@ -10,6 +10,8 @@ export async function GET(request: Request) {
   }
 
   try {
+    const sql = neon(process.env.DATABASE_URL!)
+    
     // 입주자 차량 검색
     const residentResult = await sql`
       SELECT *, '입주자' as type 
@@ -18,10 +20,10 @@ export async function GET(request: Request) {
       LIMIT 1
     `
 
-    if (residentResult.rows.length > 0) {
+    if (residentResult.length > 0) {
       return NextResponse.json({ 
         found: true, 
-        car: residentResult.rows[0] 
+        car: residentResult[0] 
       })
     }
 
@@ -34,10 +36,10 @@ export async function GET(request: Request) {
       LIMIT 1
     `
 
-    if (visitorResult.rows.length > 0) {
+    if (visitorResult.length > 0) {
       return NextResponse.json({ 
         found: true, 
-        car: visitorResult.rows[0] 
+        car: visitorResult[0] 
       })
     }
 

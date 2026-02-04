@@ -1,7 +1,12 @@
-const { sql } = require('@vercel/postgres');
+require('dotenv').config({ path: '.env.local' });
+const { neon } = require('@neondatabase/serverless');
 
 async function setupDatabase() {
   try {
+    const sql = neon(process.env.DATABASE_URL);
+    
+    console.log('📝 테이블 생성 중...');
+    
     // 입주자 차량 테이블
     await sql`
       CREATE TABLE IF NOT EXISTS residents (
@@ -24,6 +29,8 @@ async function setupDatabase() {
       )
     `;
 
+    console.log('📊 샘플 데이터 추가 중...');
+    
     // 샘플 데이터 입력
     await sql`
       INSERT INTO residents (car_number, owner, spot) 
@@ -44,6 +51,8 @@ async function setupDatabase() {
     console.log('✅ 데이터베이스 설정 완료!');
   } catch (error) {
     console.error('❌ 에러 발생:', error);
+  } finally {
+    process.exit();
   }
 }
 
