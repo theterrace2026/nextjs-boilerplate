@@ -3,9 +3,11 @@
 export default function ParkingStatus() {
   // 임시 데이터
   const residents = [
-    { id: 1, carNumber: '12가3456', owner: '김철수', spot: '1F' },
-    { id: 2, carNumber: '34나5678', owner: '이영희', spot: '1F' },
-    { id: 3, carNumber: '56다7890', owner: '박민수', spot: '1F' },
+    { id: 1, carNumber: '1257라3667', owner: '701호', spot: '1F' },
+    { id: 2, carNumber: '34하3576', owner: '701호', spot: '1F' },
+    { id: 3, carNumber: '22조3154', owner: '701호', spot: '1F' },
+    { id: 4, carNumber: '12다7980', owner: '201호', spot: '1F' },
+    { id: 5, carNumber: '56다3450', owner: '601호', spot: '1F' },
   ]
 
   const visitors = [
