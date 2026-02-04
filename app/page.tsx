@@ -3,13 +3,27 @@ import { neon } from '@neondatabase/serverless'
 export const revalidate = 0
 
 async function getResidents() {
-  const sql = neon(process.env.DATABASE_URL!)
+  const databaseUrl = process.env.DATABASE_URL
+  
+  if (!databaseUrl) {
+    console.error('DATABASE_URL is not set')
+    return []
+  }
+  
+  const sql = neon(databaseUrl)
   const rows = await sql`SELECT * FROM residents ORDER BY id`
   return rows
 }
 
 async function getVisitors() {
-  const sql = neon(process.env.DATABASE_URL!)
+  const databaseUrl = process.env.DATABASE_URL
+  
+  if (!databaseUrl) {
+    console.error('DATABASE_URL is not set')
+    return []
+  }
+  
+  const sql = neon(databaseUrl)
   const rows = await sql`SELECT * FROM visitors ORDER BY id DESC`
   return rows
 }
@@ -17,6 +31,15 @@ async function getVisitors() {
 export default async function ParkingStatus() {
   const residents = await getResidents()
   const visitors = await getVisitors()
+
+  if (!process.env.DATABASE_URL) {
+    return (
+      <div style={{ padding: '40px', textAlign: 'center' }}>
+        <h1>⚠️ 데이터베이스 연결 오류</h1>
+        <p>환경변수가 설정되지 않았습니다.</p>
+      </div>
+    )
+  }
 
   return (
     <div style={{ padding: '40px', maxWidth: '1200px', margin: '0 auto' }}>
