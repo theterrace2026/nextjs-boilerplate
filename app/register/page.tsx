@@ -7,16 +7,30 @@ export default function RegisterVisitor() {
   const router = useRouter()
   const [carNumber, setCarNumber] = useState('')
   const [spot, setSpot] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
-    // 나중에 실제 저장 로직 추가
-    alert(`차량번호: ${carNumber}\n주차위치: ${spot}\n등록되었습니다!`)
-    
-    // 폼 초기화
-    setCarNumber('')
-    setSpot('')
+    setLoading(true)
+
+    try {
+      const response = await fetch('/api/visitors', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ carNumber, spot })
+      })
+
+      if (response.ok) {
+        alert('등록되었습니다!')
+        router.push('/')
+      } else {
+        alert('등록 실패')
+      }
+    } catch (error) {
+      alert('오류가 발생했습니다')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -77,17 +91,18 @@ export default function RegisterVisitor() {
         <div style={{ display: 'flex', gap: '10px' }}>
           <button
             type="submit"
+            disabled={loading}
             style={{
               padding: '12px 24px',
               fontSize: '16px',
-              backgroundColor: '#0070f3',
+              backgroundColor: loading ? '#ccc' : '#0070f3',
               color: 'white',
               border: 'none',
               borderRadius: '4px',
-              cursor: 'pointer'
+              cursor: loading ? 'not-allowed' : 'pointer'
             }}
           >
-            등록하기
+            {loading ? '등록중...' : '등록하기'}
           </button>
           
           <button

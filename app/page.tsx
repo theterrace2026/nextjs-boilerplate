@@ -1,19 +1,20 @@
-'use client'
+import { sql } from '@vercel/postgres'
 
-export default function ParkingStatus() {
-  // 임시 데이터
-  const residents = [
-    { id: 1, carNumber: '1257라3667', owner: '701호', spot: '1F' },
-    { id: 2, carNumber: '34하3576', owner: '701호', spot: '1F' },
-    { id: 3, carNumber: '22조3154', owner: '701호', spot: '1F' },
-    { id: 4, carNumber: '12다7980', owner: '201호', spot: '1F' },
-    { id: 5, carNumber: '56다3450', owner: '601호', spot: '1F' },
-  ]
+export const revalidate = 0 // 매번 새로운 데이터 가져오기
 
-  const visitors = [
-    { id: 1, carNumber: '78라1234', visitDate: '2024-02-04', spot: '1F' },
-    { id: 2, carNumber: '90마5678', visitDate: '2024-02-04', spot: '1F' },
-  ]
+async function getResidents() {
+  const { rows } = await sql`SELECT * FROM residents ORDER BY id`
+  return rows
+}
+
+async function getVisitors() {
+  const { rows } = await sql`SELECT * FROM visitors ORDER BY id DESC`
+  return rows
+}
+
+export default async function ParkingStatus() {
+  const residents = await getResidents()
+  const visitors = await getVisitors()
 
   return (
     <div style={{ padding: '40px', maxWidth: '1200px', margin: '0 auto' }}>
@@ -21,7 +22,9 @@ export default function ParkingStatus() {
       
       {/* 입주자 차량 */}
       <section style={{ marginBottom: '40px' }}>
-        <h2 style={{ fontSize: '24px', marginBottom: '15px' }}>입주자 차량</h2>
+        <h2 style={{ fontSize: '24px', marginBottom: '15px' }}>
+          입주자 차량 ({residents.length}대)
+        </h2>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ backgroundColor: '#f5f5f5' }}>
@@ -31,10 +34,10 @@ export default function ParkingStatus() {
             </tr>
           </thead>
           <tbody>
-            {residents.map((car) => (
+            {residents.map((car: any) => (
               <tr key={car.id}>
                 <td style={{ padding: '12px', border: '1px solid #ddd', textAlign: 'center' }}>
-                  {car.carNumber}
+                  {car.car_number}
                 </td>
                 <td style={{ padding: '12px', border: '1px solid #ddd', textAlign: 'center' }}>
                   {car.owner}
@@ -50,7 +53,9 @@ export default function ParkingStatus() {
 
       {/* 방문 차량 */}
       <section>
-        <h2 style={{ fontSize: '24px', marginBottom: '15px' }}>방문 차량</h2>
+        <h2 style={{ fontSize: '24px', marginBottom: '15px' }}>
+          방문 차량 ({visitors.length}대)
+        </h2>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ backgroundColor: '#f5f5f5' }}>
@@ -60,13 +65,13 @@ export default function ParkingStatus() {
             </tr>
           </thead>
           <tbody>
-            {visitors.map((car) => (
+            {visitors.map((car: any) => (
               <tr key={car.id}>
                 <td style={{ padding: '12px', border: '1px solid #ddd', textAlign: 'center' }}>
-                  {car.carNumber}
+                  {car.car_number}
                 </td>
                 <td style={{ padding: '12px', border: '1px solid #ddd', textAlign: 'center' }}>
-                  {car.visitDate}
+                  {new Date(car.visit_date).toLocaleDateString('ko-KR')}
                 </td>
                 <td style={{ padding: '12px', border: '1px solid #ddd', textAlign: 'center' }}>
                   {car.spot}
