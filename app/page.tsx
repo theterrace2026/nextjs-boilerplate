@@ -60,8 +60,8 @@ export default async function ParkingStatus() {
           <thead>
             <tr style={{ backgroundColor: '#f5f5f5' }}>
               <th style={{ padding: '12px', border: '1px solid #ddd' }}>차량번호</th>
-              <th style={{ padding: '12px', border: '1px solid #ddd' }}>소유자</th>
-              <th style={{ padding: '12px', border: '1px solid #ddd' }}>주차위치</th>
+              <th style={{ padding: '12px', border: '1px solid #ddd' }}>호실</th>
+              <th style={{ padding: '12px', border: '1px solid #ddd' }}>비고</th>
             </tr>
           </thead>
           <tbody>
@@ -92,7 +92,7 @@ export default async function ParkingStatus() {
             <tr style={{ backgroundColor: '#f5f5f5' }}>
               <th style={{ padding: '12px', border: '1px solid #ddd' }}>차량번호</th>
               <th style={{ padding: '12px', border: '1px solid #ddd' }}>방문일</th>
-              <th style={{ padding: '12px', border: '1px solid #ddd' }}>주차위치</th>
+              <th style={{ padding: '12px', border: '1px solid #ddd' }}>방문세대</th>
             </tr>
           </thead>
           <tbody>

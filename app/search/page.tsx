@@ -41,7 +41,7 @@ export default function SearchCar() {
 
   return (
     <div style={{ padding: '40px', maxWidth: '600px', margin: '0 auto' }}>
-      <h1 style={{ fontSize: '32px', marginBottom: '30px' }}>차량번호 검색</h1>
+      <h1 style={{ fontSize: '32px', marginBottom: '30px' }}>차량번호 검색(뒷자리4개)</h1>
       
       <form onSubmit={handleSearch} style={{ marginBottom: '30px' }}>
         <div style={{ display: 'flex', gap: '10px' }}>
@@ -99,7 +99,7 @@ export default function SearchCar() {
               {searchResult.type === '방문' && (
                 <p><strong>방문일:</strong> {new Date(searchResult.visit_date).toLocaleDateString('ko-KR')}</p>
               )}
-              <p><strong>주차위치:</strong> {searchResult.spot}</p>
+              <p><strong>방문호실:</strong> {searchResult.spot}</p>
             </div>
           )}
         </div>

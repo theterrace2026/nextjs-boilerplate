@@ -84,13 +84,13 @@ export default function RegisterVisitor() {
             fontSize: '16px',
             fontWeight: 'bold'
           }}>
-            주차위치
+            방문세대
           </label>
           <input
             type="text"
             value={spot}
             onChange={(e) => setSpot(e.target.value)}
-            placeholder="예: V-01"
+            placeholder="예: 201호"
             required
             style={{
               width: '100%',
