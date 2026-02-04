@@ -1,11 +1,27 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function SearchCar() {
+  const router = useRouter()
   const [searchTerm, setSearchTerm] = useState('')
   const [searchResult, setSearchResult] = useState<any>(null)
   const [loading, setLoading] = useState(false)
+
+  // 인증 체크
+  useEffect(() => {
+    const checkAuth = () => {
+      const cookies = document.cookie.split(';')
+      const authCookie = cookies.find(c => c.trim().startsWith('parking_auth='))
+      
+      if (!authCookie) {
+        router.push('/login')
+      }
+    }
+    
+    checkAuth()
+  }, [router])
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault()

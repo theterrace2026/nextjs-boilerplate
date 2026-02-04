@@ -1,6 +1,18 @@
 import { neon } from '@neondatabase/serverless'
+import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
 
 export const revalidate = 0
+
+// 인증 체크 함수
+async function checkAuth() {
+  const cookieStore = await cookies()
+  const auth = cookieStore.get('parking_auth')
+  
+  if (!auth) {
+    redirect('/login')
+  }
+}
 
 async function getResidents() {
   const databaseUrl = process.env.DATABASE_URL
@@ -29,17 +41,11 @@ async function getVisitors() {
 }
 
 export default async function ParkingStatus() {
+  // 인증 체크
+  await checkAuth()
+  
   const residents = await getResidents()
   const visitors = await getVisitors()
-
-  if (!process.env.DATABASE_URL) {
-    return (
-      <div style={{ padding: '40px', textAlign: 'center' }}>
-        <h1>⚠️ 데이터베이스 연결 오류</h1>
-        <p>환경변수가 설정되지 않았습니다.</p>
-      </div>
-    )
-  }
 
   return (
     <div style={{ padding: '40px', maxWidth: '1200px', margin: '0 auto' }}>

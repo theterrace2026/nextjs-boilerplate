@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
 export default function RegisterVisitor() {
@@ -8,6 +8,20 @@ export default function RegisterVisitor() {
   const [carNumber, setCarNumber] = useState('')
   const [spot, setSpot] = useState('')
   const [loading, setLoading] = useState(false)
+
+  // 인증 체크
+  useEffect(() => {
+    const checkAuth = () => {
+      const cookies = document.cookie.split(';')
+      const authCookie = cookies.find(c => c.trim().startsWith('parking_auth='))
+      
+      if (!authCookie) {
+        router.push('/login')
+      }
+    }
+    
+    checkAuth()
+  }, [router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
