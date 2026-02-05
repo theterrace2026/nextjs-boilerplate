@@ -60,6 +60,33 @@ export default function ParkingStatus() {
     }
   }
 
+  // ✅ 삭제 함수 추가
+  const handleDelete = async (id: number, type: 'resident' | 'visitor') => {
+    const confirmMsg = type === 'resident' 
+      ? '입주자 차량을 삭제하시겠습니까?' 
+      : '방문 차량을 삭제하시겠습니까?'
+    
+    if (!confirm(confirmMsg)) {
+      return
+    }
+
+    try {
+      const response = await fetch(`/api/residents?id=${id}&type=${type}`, {
+        method: 'DELETE'
+      })
+
+      if (response.ok) {
+        alert('삭제되었습니다')
+        fetchData() // 데이터 새로고침
+      } else {
+        alert('삭제 실패')
+      }
+    } catch (error) {
+      console.error('Delete error:', error)
+      alert('오류가 발생했습니다')
+    }
+  }
+
   const sortData = <T,>(
     data: T[],
     key: keyof T,
@@ -149,7 +176,21 @@ export default function ParkingStatus() {
                 <td style={thTdStyle}>{car.owner}</td>
                 <td style={thTdStyle}>{car.spot}</td>
                 <td style={thTdStyle}>
-                  <button>삭제</button>
+                  {/* ✅ onClick 추가 */}
+                  <button
+                    onClick={() => handleDelete(car.id, 'resident')}
+                    style={{
+                      padding: '6px 12px',
+                      fontSize: '14px',
+                      backgroundColor: '#dc3545',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '4px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    삭제
+                  </button>
                 </td>
               </tr>
             ))}
@@ -203,7 +244,21 @@ export default function ParkingStatus() {
                 </td>
                 <td style={thTdStyle}>{car.spot}</td>
                 <td style={thTdStyle}>
-                  <button>삭제</button>
+                  {/* ✅ onClick 추가 */}
+                  <button
+                    onClick={() => handleDelete(car.id, 'visitor')}
+                    style={{
+                      padding: '6px 12px',
+                      fontSize: '14px',
+                      backgroundColor: '#dc3545',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '4px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    삭제
+                  </button>
                 </td>
               </tr>
             ))}
