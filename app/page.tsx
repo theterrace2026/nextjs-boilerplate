@@ -30,12 +30,12 @@ export default function ParkingStatus() {
   const [residentSort, setResidentSort] = useState<{
     key: keyof Car
     order: SortOrder
-  } | null>(null)
+  }>({ key: 'owner', order: 'asc' })
 
   const [visitorSort, setVisitorSort] = useState<{
     key: keyof Car
     order: SortOrder
-  } | null>(null)
+  }>({ key: 'spot', order: 'asc' })
 
   useEffect(() => {
     const auth = document.cookie
@@ -93,38 +93,45 @@ export default function ParkingStatus() {
     order: SortOrder
   ) =>
     [...data].sort((a: any, b: any) => {
-      if (!a[key]) return 1
-      if (!b[key]) return -1
+      const valA = a[key]
+      const valB = b[key]
+
+      if (!valA) return 1
+      if (!valB) return -1
+
+      const numA = Number(valA)
+      const numB = Number(valB)
+      const bothNumeric = !isNaN(numA) && !isNaN(numB)
+
+      if (bothNumeric) {
+        return order === 'asc' ? numA - numB : numB - numA
+      }
+
       return order === 'asc'
-        ? a[key] > b[key] ? 1 : -1
-        : a[key] < b[key] ? 1 : -1
+        ? valA > valB ? 1 : -1
+        : valA < valB ? 1 : -1
     })
 
-  const sortedResidents = residentSort
-    ? sortData(residents, residentSort.key, residentSort.order)
-    : residents
-
-  const sortedVisitors = visitorSort
-    ? sortData(visitors, visitorSort.key, visitorSort.order)
-    : visitors
+  const sortedResidents = sortData(residents, residentSort.key, residentSort.order)
+  const sortedVisitors = sortData(visitors, visitorSort.key, visitorSort.order)
 
   const toggleSort = (
-    current: typeof residentSort,
+    current: { key: keyof Car; order: SortOrder },
     setter: Function,
     key: keyof Car
   ) => {
     setter(
-      current?.key === key
+      current.key === key
         ? { key, order: current.order === 'asc' ? 'desc' : 'asc' }
         : { key, order: 'asc' }
     )
   }
 
   const sortIcon = (
-    current: typeof residentSort,
+    current: { key: keyof Car; order: SortOrder },
     key: keyof Car
   ) => {
-    if (current?.key !== key) return '⇅'
+    if (current.key !== key) return '⇅'
     return current.order === 'asc' ? '▲' : '▼'
   }
 
