@@ -138,16 +138,16 @@ export default function ParkingStatus() {
   if (loading) return <div style={{ padding: 40 }}>로딩 중...</div>
 
   return (
-    <div style={{ padding: 40, maxWidth: 1200, margin: '0 auto' }}>
-      <h1 style={{ fontSize: 32, marginBottom: 30 }}>주차 현황</h1>
+    <div className="parking-page" style={{ padding: 40, maxWidth: 1200, margin: '0 auto' }}>
+      <h1 className="parking-title" style={{ fontSize: 32, marginBottom: 30 }}>주차 현황</h1>
 
       {/* 입주자 차량 */}
-      <section style={{ marginBottom: 40 }}>
-        <h2 style={{ fontSize: 24, marginBottom: 15 }}>
+      <section className="parking-section" style={{ marginBottom: 40 }}>
+        <h2 className="parking-section-title" style={{ fontSize: 24, marginBottom: 15 }}>
           입주자 차량 ({residents.length}대)
         </h2>
 
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <table className="parking-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr>
               {[
@@ -185,6 +185,7 @@ export default function ParkingStatus() {
                 <td style={thTdStyle}>
                   {/* ✅ onClick 추가 */}
                   <button
+                    className="parking-delete-button"
                     onClick={() => handleDelete(car.id, 'resident')}
                     style={{
                       padding: '6px 12px',
@@ -206,12 +207,12 @@ export default function ParkingStatus() {
       </section>
 
       {/* 방문 차량 */}
-      <section>
-        <h2 style={{ fontSize: 24, marginBottom: 15 }}>
+      <section className="parking-section">
+        <h2 className="parking-section-title" style={{ fontSize: 24, marginBottom: 15 }}>
           방문 차량 ({visitors.length}대)
         </h2>
 
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <table className="parking-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr>
               {[
@@ -253,6 +254,7 @@ export default function ParkingStatus() {
                 <td style={thTdStyle}>
                   {/* ✅ onClick 추가 */}
                   <button
+                    className="parking-delete-button"
                     onClick={() => handleDelete(car.id, 'visitor')}
                     style={{
                       padding: '6px 12px',
