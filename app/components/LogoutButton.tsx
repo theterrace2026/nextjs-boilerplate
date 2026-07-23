@@ -8,6 +8,7 @@ export default function LogoutButton() {
 
   return (
     <button
+      className="site-nav-logout"
       onClick={handleLogout}
       style={{ 
         color: 'white',

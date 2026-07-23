@@ -147,7 +147,7 @@ export default function ParkingStatus() {
           입주자 차량 ({residents.length}대)
         </h2>
 
-        <table className="parking-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <table className="parking-table resident-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr>
               {[
@@ -157,6 +157,13 @@ export default function ParkingStatus() {
               ].map(([key, label]) => (
                 <th
                   key={key}
+                  className={
+                    key === 'car_number'
+                      ? 'parking-car-number'
+                      : key === 'spot'
+                        ? 'parking-optional-column'
+                        : 'parking-secondary-column'
+                  }
                   style={{ ...thTdStyle, cursor: 'pointer' }}
                   onClick={() =>
                     toggleSort(
@@ -172,17 +179,17 @@ export default function ParkingStatus() {
                   </span>
                 </th>
               ))}
-              <th style={thTdStyle}>작업</th>
+              <th className="parking-action-column" style={thTdStyle}>작업</th>
             </tr>
           </thead>
 
           <tbody>
             {sortedResidents.map(car => (
               <tr key={car.id}>
-                <td style={thTdStyle}>{car.car_number}</td>
-                <td style={thTdStyle}>{car.owner}</td>
-                <td style={thTdStyle}>{car.spot}</td>
-                <td style={thTdStyle}>
+                <td className="parking-car-number" style={thTdStyle}>{car.car_number}</td>
+                <td className="parking-secondary-column" style={thTdStyle}>{car.owner}</td>
+                <td className="parking-optional-column" style={thTdStyle}>{car.spot}</td>
+                <td className="parking-action-column" style={thTdStyle}>
                   {/* ✅ onClick 추가 */}
                   <button
                     className="parking-delete-button"
@@ -212,7 +219,7 @@ export default function ParkingStatus() {
           방문 차량 ({visitors.length}대)
         </h2>
 
-        <table className="parking-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <table className="parking-table visitor-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr>
               {[
@@ -222,6 +229,11 @@ export default function ParkingStatus() {
               ].map(([key, label]) => (
                 <th
                   key={key}
+                  className={
+                    key === 'car_number'
+                      ? 'parking-car-number'
+                      : 'parking-secondary-column'
+                  }
                   style={{ ...thTdStyle, cursor: 'pointer' }}
                   onClick={() =>
                     toggleSort(
@@ -237,21 +249,21 @@ export default function ParkingStatus() {
                   </span>
                 </th>
               ))}
-              <th style={thTdStyle}>작업</th>
+              <th className="parking-action-column" style={thTdStyle}>작업</th>
             </tr>
           </thead>
 
           <tbody>
             {sortedVisitors.map(car => (
               <tr key={car.id}>
-                <td style={thTdStyle}>{car.car_number}</td>
-                <td style={thTdStyle}>
+                <td className="parking-car-number" style={thTdStyle}>{car.car_number}</td>
+                <td className="parking-secondary-column" style={thTdStyle}>
                   {car.visit_date
                     ? new Date(car.visit_date).toLocaleDateString('ko-KR')
                     : '-'}
                 </td>
-                <td style={thTdStyle}>{car.spot}</td>
-                <td style={thTdStyle}>
+                <td className="parking-secondary-column" style={thTdStyle}>{car.spot}</td>
+                <td className="parking-action-column" style={thTdStyle}>
                   {/* ✅ onClick 추가 */}
                   <button
                     className="parking-delete-button"
