@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import LogoutButton from './components/LogoutButton'
+import './globals.css'
 
 export default function RootLayout({
   children,

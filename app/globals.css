@@ -69,37 +69,37 @@ body {
 
   .parking-page {
     box-sizing: border-box;
-    padding: 14px 8px !important;
+    padding: 8px 6px !important;
     width: 100%;
   }
 
   .parking-title {
-    font-size: 22px !important;
-    line-height: 1.2;
-    margin-bottom: 10px !important;
+    font-size: 18px !important;
+    line-height: 1.1;
+    margin-bottom: 6px !important;
   }
 
   .parking-section {
-    margin-bottom: 16px !important;
+    margin-bottom: 8px !important;
   }
 
   .parking-section-title {
-    font-size: 16px !important;
-    line-height: 1.2;
-    margin-bottom: 5px !important;
+    font-size: 13px !important;
+    line-height: 1.1;
+    margin-bottom: 3px !important;
   }
 
   .parking-table {
     width: 100% !important;
     table-layout: fixed;
     font-size: 12px;
-    line-height: 1.2;
+    line-height: 1.1;
   }
 
   .parking-table th,
   .parking-table td {
     box-sizing: border-box;
-    padding: 4px !important;
+    padding: 3px !important;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -128,24 +128,24 @@ body {
   }
 
   .parking-table .parking-action-column {
-    width: 60px;
-    padding: 2px !important;
+    width: 44px;
+    padding: 1px !important;
   }
 
   .parking-table th span {
     margin-left: 1px !important;
-    font-size: 9px !important;
+    font-size: 8px !important;
   }
 
   .parking-delete-button {
     box-sizing: border-box;
     width: 100%;
-    min-width: 52px;
-    min-height: 44px;
-    padding: 0 6px !important;
-    border-radius: 4px !important;
-    font-size: 13px !important;
-    line-height: 1 !important;
+    min-width: 36px;
+    min-height: 24px;
+    padding: 0 !important;
+    border-radius: 3px !important;
+    font-size: 10px !important;
+    line-height: 1.6 !important;
     white-space: nowrap;
     word-break: keep-all;
   }
