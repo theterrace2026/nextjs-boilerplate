@@ -29,6 +29,19 @@ async function setupDatabase() {
       )
     `;
 
+    await sql`
+      CREATE TABLE IF NOT EXISTS deletion_requests (
+        id SERIAL PRIMARY KEY,
+        target_type VARCHAR(10) NOT NULL CHECK (target_type IN ('resident', 'visitor')),
+        target_id INTEGER NOT NULL,
+        status VARCHAR(10) NOT NULL DEFAULT 'pending'
+          CHECK (status IN ('pending', 'approved', 'rejected')),
+        requested_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        reviewed_at TIMESTAMP,
+        UNIQUE (target_type, target_id)
+      )
+    `;
+
     console.log('📊 샘플 데이터 추가 중...');
     
     // 샘플 데이터 입력

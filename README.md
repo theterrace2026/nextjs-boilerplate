@@ -2,6 +2,16 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+Create `.env.local` and set both the Neon database URL and an administrator password:
+
+```bash
+DATABASE_URL=postgresql://...
+ADMIN_PASSWORD=use-a-strong-password
+```
+
+Deletion requests remain pending until an administrator unlocks **관리자 모드** on the
+parking status screen and approves or rejects them.
+
 First, run the development server:
 
 ```bash
