@@ -43,6 +43,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: '차량을 찾을 수 없습니다.' }, { status: 404 })
     }
 
+    if (type === 'visitor') {
+      await sql`DELETE FROM visitors WHERE id = ${targetId}`
+      return NextResponse.json({ success: true, immediate: true })
+    }
+
     await sql`
       INSERT INTO deletion_requests (target_type, target_id)
       VALUES (${type}, ${targetId})

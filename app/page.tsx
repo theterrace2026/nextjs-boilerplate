@@ -84,7 +84,10 @@ export default function ParkingStatus() {
   }, [fetchData, fetchRequests, router])
 
   const requestDeletion = async (car: Car, type: 'resident' | 'visitor') => {
-    if (!confirm(`${car.car_number} 차량의 삭제를 요청하시겠습니까?`)) return
+    const confirmMessage = type === 'visitor'
+      ? `${car.car_number} 차량을 삭제하시겠습니까?`
+      : `${car.car_number} 차량의 삭제를 요청하시겠습니까?`
+    if (!confirm(confirmMessage)) return
 
     setBusy(true)
     try {
@@ -95,7 +98,7 @@ export default function ParkingStatus() {
       })
       const data = await response.json()
       if (!response.ok) throw new Error(data.error)
-      alert('관리자에게 삭제 요청을 보냈습니다.')
+      alert(type === 'visitor' ? '방문 차량을 삭제했습니다.' : '관리자에게 삭제 요청을 보냈습니다.')
       await fetchData()
       if (isAdmin) await fetchRequests()
     } catch (error) {
@@ -193,7 +196,7 @@ export default function ParkingStatus() {
         cursor: car.deletion_requested ? 'default' : 'pointer'
       }}
     >
-      {car.deletion_requested ? '요청됨' : '삭제 요청'}
+      {car.deletion_requested ? '요청됨' : type === 'visitor' ? '삭제' : '삭제 요청'}
     </button>
   )
 
