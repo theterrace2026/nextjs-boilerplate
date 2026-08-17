@@ -181,7 +181,7 @@ body {
   }
 
   .parking-table .parking-car-number {
-    width: 34%;
+    width: 29%;
     white-space: nowrap;
     word-break: keep-all;
   }
@@ -191,7 +191,7 @@ body {
   }
 
   .resident-table .parking-optional-column {
-    display: none;
+    width: auto;
   }
 
   .visitor-table .parking-car-number {
